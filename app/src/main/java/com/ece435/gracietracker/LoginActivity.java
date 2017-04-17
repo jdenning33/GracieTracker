@@ -14,6 +14,10 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        if( isLoggedIn() ){
+            goToUserHomeView( null );
+        }
     }
 
     public String getUserName() {
@@ -28,5 +32,9 @@ public class LoginActivity extends AppCompatActivity {
         String userName = getUserName();
         intent.putExtra(USER_NAME, userName);
         startActivity(intent);
+    }
+
+    public boolean isLoggedIn() {
+        return false;
     }
 }

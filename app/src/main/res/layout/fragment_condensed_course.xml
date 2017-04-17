@@ -11,7 +11,6 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardBackgroundColor="?attr/colorControlHighlight"
         app:cardElevation="0dp"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="141dp">
@@ -30,7 +29,6 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:text="@string/course_title"
-                android:textAlignment="textStart"
                 android:textStyle="bold"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -40,15 +38,13 @@
             <TextView
                 android:id="@+id/courseDescription"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="4dp"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="0dp"
                 android:text="@string/course_description"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/courseTitle" />
