@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">GracieTracker</string>
+    <string name="edit_message">Enter a Message</string>
+    <string name="button_send">Send</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="welcome_to">welcome to</string>
+    <string name="please_login">please login</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
+    <string name="submit">submit</string>
+    <string name="connect_with">or connect with</string>
+    <string name="continue_as_guest">or continue as a guest</string>
+    <string name="courses_and_videos">Courses and Videos</string>
+    <string name="calendar">Calendar</string>
+
+
+    <string name="current_belt">Current Belt:</string>
+    <string name="next_belt">Next Belt:</string>
+    <string name="courses_needed">Courses Needed:</string>
+    <string name="replace">Replace</string>
+    <string name="suggested_course">Suggested Course</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="course_title">Course Title</string>
+    <string name="course_description">Course Description</string>
+    <string name="courses">Courses</string>
+
+</resources>
