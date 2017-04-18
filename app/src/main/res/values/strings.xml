@@ -25,5 +25,12 @@
     <string name="course_title">Course Title</string>
     <string name="course_description">Course Description</string>
     <string name="courses">Courses</string>
+    <string name="coming_soon">coming soon</string>
+    <string name="primary_technique">Primary Technique</string>
+    <string name="secondary_technique">Secondary Technique</string>
+    <string name="course_number">Course</string>
+    <string name="training_video" >Training Video:</string>
+    <string name="progress">Progress</string>
+    <string name="upcoming_courses">Upcoming Course Offerings</string>
 
 </resources>
