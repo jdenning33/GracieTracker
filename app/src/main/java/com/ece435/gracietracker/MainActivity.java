@@ -1,10 +1,14 @@
 package com.ece435.gracietracker;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DrawableUtils;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,8 +33,6 @@ CourseFragment.OnFragmentInteractionListener{
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-
-
         // Create a fragment manager so that we can initialize the MainFragment
         fragmentManager = getSupportFragmentManager();
         goToHomeFragment();
@@ -51,6 +53,9 @@ CourseFragment.OnFragmentInteractionListener{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
             case R.id.action_settings:
                 // User chose the "Settings" item, show the app settings UI...
                 return true;
@@ -71,6 +76,15 @@ CourseFragment.OnFragmentInteractionListener{
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.appbar, menu);
+
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setHomeButtonEnabled(true);
+            ab.setBackgroundDrawable(new ColorDrawable(
+                    ContextCompat.getColor(this, R.color.colorSupportActionBar)));
+            ab.show();
+        }
+
         return true;
     }
 
