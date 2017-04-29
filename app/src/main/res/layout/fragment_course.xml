@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ece435.gracietracker.CourseActivity">
+    tools:context="com.ece435.gracietracker.CourseFragment">
 
     <TextView
         android:id="@+id/primaryTechniqueView"
@@ -29,7 +29,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="
+        8dp"
         android:layout_marginTop="0dp"
         android:text="@string/replace"
         android:textStyle="bold"
@@ -66,7 +67,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/primaryVideoLink" />
+        app:layout_constraintTop_toBottomOf="@+id/primaryTechniqueLinkView" />
 
     <TextView
         android:id="@+id/courseNumberLabel"
@@ -103,34 +104,37 @@
         app:layout_constraintTop_toBottomOf="@+id/secondaryTechniqueView" />
 
     <Button
-        android:id="@+id/primaryVideoLink"
+        android:id="@+id/primaryTechniqueLinkView"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:text="Button"
+        android:layout_marginStart="8dp"
+        android:text="@string/click_here"
+        android:textAlignment="textStart"
         app:layout_constraintBaseline_toBaselineOf="@+id/primaryTrainingVideo"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toRightOf="@+id/primaryTrainingVideo"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <Button
-        android:id="@+id/secondaryVideoLink"
+        android:id="@+id/secondaryTechniqueLinkView"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:text="Button"
+        android:layout_marginStart="8dp"
+        android:onClick="handleLinkClick"
+        android:text="@string/click_here"
+        android:textAlignment="textStart"
         app:layout_constraintBaseline_toBaselineOf="@+id/secondaryTrainingVideo"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/secondaryTrainingVideo"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
         android:id="@+id/primaryTrainingVideo"
@@ -144,7 +148,7 @@
         app:layout_constraintTop_toBottomOf="@+id/primaryTechniqueView" />
 
     <TextView
-        android:id="@+id/textView18"
+        android:id="@+id/Progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -164,11 +168,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/textView18"
+        app:layout_constraintLeft_toLeftOf="@+id/Progress"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="@+id/textView18"
+        app:layout_constraintRight_toRightOf="@+id/Progress"
         android:layout_marginTop="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView18"
+        app:layout_constraintTop_toBottomOf="@+id/Progress"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintHorizontal_bias="0.501" />
@@ -181,7 +185,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="0dp"
         app:layout_constraintLeft_toRightOf="@+id/checkBox1"
-        app:layout_constraintTop_toBottomOf="@+id/textView18" />
+        app:layout_constraintTop_toBottomOf="@+id/Progress" />
 
     <CheckBox
         android:id="@+id/checkBox0"
@@ -191,7 +195,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="0dp"
         app:layout_constraintRight_toLeftOf="@+id/checkBox1"
-        app:layout_constraintTop_toBottomOf="@+id/textView18" />
+        app:layout_constraintTop_toBottomOf="@+id/Progress" />
 
     <TextView
         android:id="@+id/upcomingCoursesLabel"
@@ -206,7 +210,7 @@
         android:textAlignment="center"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/secondaryVideoLink" />
+        app:layout_constraintTop_toBottomOf="@+id/secondaryTechniqueLinkView" />
 
     <ListView
         android:id="@+id/upcomingCoursesList"
