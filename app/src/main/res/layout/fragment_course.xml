@@ -224,18 +224,21 @@
         android:layout_marginLeft="8dp" />
 
     <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="wrap_content"
+        android:id="@+id/primaryTechniqueLinkView"
+        android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginBottom="0dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="0dp"
         android:adjustViewBounds="true"
+        android:background="@drawable/white_play_button"
+        android:cropToPadding="false"
         app:layout_constraintBottom_toBottomOf="@+id/VideoThumbnail"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="@+id/VideoThumbnail"
         app:layout_constraintRight_toRightOf="@+id/VideoThumbnail"
         app:layout_constraintTop_toTopOf="@+id/VideoThumbnail"
-        app:srcCompat="@drawable/white_play_button" />
+        app:layout_constraintVertical_bias="0.504" />
 
 </android.support.constraint.ConstraintLayout>

@@ -55,7 +55,7 @@ public class CourseFragment extends Fragment {
         TextView primaryTechniqueView = (TextView) view.findViewById(R.id.primaryTechniqueView);
         TextView secondaryTechniqueView = (TextView) view.findViewById(R.id.secondaryTechniqueView);
 
-        Button primaryTechniqueLinkView = (Button) view.findViewById(R.id.primaryTechniqueLinkView);
+        ImageButton primaryTechniqueLinkView = (ImageButton) view.findViewById(R.id.primaryTechniqueLinkView);
         Button secondaryTechniqueLinkView = (Button) view.findViewById(R.id.secondaryTechniqueLinkView);
 
         CheckBox cb0 = (CheckBox) view.findViewById(R.id.checkBox0);

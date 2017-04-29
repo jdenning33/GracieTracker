@@ -57,7 +57,7 @@
         app:layout_constraintTop_toBottomOf="@+id/PasswordText" />
 
     <Button
-        android:id="@+id/ContinueAsGuestButton"
+        android:id="@+id/CreateAccountButton"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -66,31 +66,33 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:text="@string/continue_as_guest"
+        android:text="@string/create_new_account"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <com.google.android.gms.common.SignInButton
+    <ImageButton
         android:id="@+id/GoogleSignInButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:background="@drawable/icon_google"
         app:layout_constraintRight_toLeftOf="@+id/space3"
-        app:layout_constraintTop_toTopOf="@+id/space3"
-        app:srcCompat="@android:drawable/btn_star_big_on" />
+        app:layout_constraintTop_toTopOf="@+id/space3" />
 
     <ImageButton
         android:id="@+id/FacebookSignInButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/icon_fb"
+        android:cropToPadding="true"
         app:layout_constraintLeft_toRightOf="@+id/space3"
-        app:layout_constraintTop_toTopOf="@+id/space3"
-        app:srcCompat="@android:drawable/btn_star_big_on" />
+        app:layout_constraintTop_toTopOf="@+id/space3" />
 
     <Space
         android:layout_width="wrap_content"
@@ -116,7 +118,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/connect_with"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/ContinueAsGuestButton"
+        app:layout_constraintBottom_toTopOf="@+id/CreateAccountButton"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/EmailSignInButton"
