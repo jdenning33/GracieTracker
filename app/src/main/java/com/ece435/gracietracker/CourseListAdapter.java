@@ -32,7 +32,7 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.course_list_item, null);
+            v = vi.inflate(R.layout.layout_course_list_item, null);
 
             CheckBox cb0 = (CheckBox) v.findViewById(R.id.completed0);
             cb0.setOnClickListener( new View.OnClickListener() {

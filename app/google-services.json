@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "196213678980",
+    "firebase_url": "https://gracie-tracker.firebaseio.com",
+    "project_id": "gracie-tracker",
+    "storage_bucket": "gracie-tracker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:196213678980:android:00ed091d62880d40",
+        "android_client_info": {
+          "package_name": "com.ece435.gracietracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "196213678980-b2e8n5v2g0bc38gv61g8cilk55u8b6nu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ece435.gracietracker",
+            "certificate_hash": "230e5c009287ddb66345b2d30ad56a00a79021ad"
+          }
+        },
+        {
+          "client_id": "196213678980-bv9l6m4r4g726e1vl5tf2e3p4bg3tp05.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkEAIR9mrV6Lp-8EnvqHadwWTAxLgREsM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "196213678980-bv9l6m4r4g726e1vl5tf2e3p4bg3tp05.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

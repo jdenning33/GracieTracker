@@ -9,8 +9,8 @@
     <string name="password">password</string>
     <string name="submit">submit</string>
     <string name="connect_with">or connect with</string>
-    <string name="continue_as_guest">or continue as a guest</string>
-    <string name="courses_and_videos">Courses and Videos</string>
+    <string name="continue_as_guest">continue as guest</string>
+    <string name="courses_and_videos">Courses</string>
     <string name="calendar">Calendar</string>
 
 
@@ -29,8 +29,13 @@
     <string name="primary_technique">Primary Technique</string>
     <string name="secondary_technique">Secondary Technique</string>
     <string name="course_number">Course</string>
-    <string name="training_video" >Training Video:</string>
+    <string name="training_video">Training Video:</string>
     <string name="progress">Progress</string>
     <string name="upcoming_courses">Upcoming Course Offerings</string>
+    <string name="click_here">Click Here</string>
+    <string name="sign_in">Sign In</string>
+    <string name="create_new_user">New User</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="settings">Settings</string>
 
 </resources>

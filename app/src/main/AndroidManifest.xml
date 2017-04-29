@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,10 +21,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UserHomeActivity" />
-        <activity android:name=".CoursesActivity" />
-        <activity android:name=".CalendarActivity" />
-        <activity android:name=".CourseActivity"></activity>
+        <activity android:name=".CourseListFragment" />
+        <activity android:name=".CalendarFragment" />
+        <activity android:name=".CourseFragment" />
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>
