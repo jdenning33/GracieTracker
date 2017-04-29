@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class CourseFragment extends Fragment {
@@ -95,7 +96,7 @@ public class CourseFragment extends Fragment {
 
         primaryTechniqueLinkView.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
-                Button link = (Button) v;
+                ImageButton link = (ImageButton) v;
 
                 String address = course.getPrimaryTechniqueLink();
                 Intent i = new Intent(Intent.ACTION_VIEW);
