@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -79,7 +81,7 @@ CourseFragment.OnFragmentInteractionListener{
 
         ActionBar ab = getSupportActionBar();
         if (ab != null) {
-            ab.setHomeButtonEnabled(true);
+            ab.setDisplayHomeAsUpEnabled(true);
             ab.setBackgroundDrawable(new ColorDrawable(
                     ContextCompat.getColor(this, R.color.colorSupportActionBar)));
             ab.show();
@@ -87,7 +89,6 @@ CourseFragment.OnFragmentInteractionListener{
 
         return true;
     }
-
 
     public void goToHomeFragment() {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

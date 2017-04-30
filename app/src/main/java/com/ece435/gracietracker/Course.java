@@ -41,6 +41,18 @@ public class Course {
     public String getPrimaryTechnique(){
         return Skill.skillArray.get(primarySkills[0]-1).getName();
     }
+    public ArrayList<Skill> getAllTechniques(){
+        ArrayList<Skill> skills = new ArrayList<Skill>();
+
+        for(int i=0; i<primarySkills.length; i++){
+            skills.add(Skill.skillArray.get(primarySkills[i]-1));
+        }
+        for(int i=0; i<secondarySkills.length; i++){
+            skills.add(Skill.skillArray.get(secondarySkills[i]-1));
+        }
+
+        return skills;
+    }
     public String getSecondaryTechnique(){
         return Skill.skillArray.get(secondarySkills[0]-1).getName();
     }

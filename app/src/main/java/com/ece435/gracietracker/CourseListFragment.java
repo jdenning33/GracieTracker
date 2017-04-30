@@ -1,15 +1,15 @@
 package com.ece435.gracietracker;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TabHost;
 
 public class CourseListFragment extends Fragment {
     public static final String COURSE_ID = "com.ece435.gracietracker.courseID";
@@ -40,16 +40,34 @@ public class CourseListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_course_list, container, false);
 
+        // Find the tab host
+        TabHost host = (TabHost) view.findViewById(R.id.CourseTypeTab);
+        host.setup();
+
+        // Inflate Tab1 for the tab layout
+        FrameLayout tab1 = (FrameLayout) view.findViewById(R.id.course_list);
+        View view1 = inflater.inflate(R.layout.tab_course_list, tab1, true);
         CourseListAdapter courseAdapter = new CourseListAdapter(getContext(), R.layout.layout_course_list_item, Course.courseArray);
+        ListView listView1 = (ListView) view1.findViewById(R.id.CourseList);
+        listView1.setAdapter(courseAdapter);
 
-        ListView listView = (ListView) view.findViewById(R.id.CourseList);
-        listView.setAdapter(courseAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mListener.goToCourseView(position);
             }
         });
+
+        //Add Tab 1 to the host
+        TabHost.TabSpec spec = host.newTabSpec("Skill Courses");
+        spec.setContent(R.id.course_list);
+        spec.setIndicator("Skill Courses");
+        host.addTab(spec);
+
+        //Tab 2
+        spec = host.newTabSpec("Reflex Development");
+        spec.setContent(R.id.tab2);
+        spec.setIndicator("Reflex Development");
+        host.addTab(spec);
 
         return view;
     }
