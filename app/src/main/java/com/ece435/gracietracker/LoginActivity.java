@@ -7,8 +7,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -17,20 +15,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity implements
-        SignInFragment.OnFragmentInteractionListener{
+        Firebase.OnFireBaseInteractionListener,
+        SignInFragment.OnFragmentInteractionListener,
+        SignUpFragment.OnFragmentInteractionListener{
+
     FragmentManager fragmentManager;
 
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    private Firebase firebase;
     private GoogleApiClient mGoogleApiClient;
     public static final int RC_SIGN_IN = 111;
 
@@ -41,7 +34,8 @@ public class LoginActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        initializeFireBase();
+        firebase = new Firebase(this);
+        firebase.initialize();
         initializeGoogleSignIn();
 
         // Create a fragment manager so that we can initialize the MainFragment
@@ -58,10 +52,20 @@ public class LoginActivity extends AppCompatActivity implements
         finish();
     }
 
+    @Override
     public void goToSignInFragment() {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         SignInFragment signInFragment = SignInFragment.newInstance();
         fragmentTransaction.replace(R.id.MainFragment, signInFragment);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void goToSignUpFragment() {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        SignUpFragment signUpFragment = SignUpFragment.newInstance();
+        fragmentTransaction.replace(R.id.MainFragment, signUpFragment);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
@@ -71,105 +75,61 @@ public class LoginActivity extends AppCompatActivity implements
     ///////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public void emailSignIn(String email, String password){
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("Login", "signInWithEmail:onComplete:" + task.isSuccessful());
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Log.w("Login", "signInWithEmail:failed", task.getException());
-                            Toast.makeText(LoginActivity.this, "Could Not Authenticate",
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(LoginActivity.this, "You Have Successfully Logged In",
-                                    Toast.LENGTH_SHORT).show();
-                            goToMainView();
-                        }
-
-                        // ...
-                    }
-                });
-    }
-
-
-    ///////////////////////////////////////////////////////////////////////////////////////////
-    ///     Firebase Functions
-    ///////////////////////////////////////////////////////////////////////////////////////////
-    public void initializeFireBase(){
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if(user != null) {
-                    // User is signed in
-                    Log.d("Login", "onAuthStateChanged:signed:_in" + user.getUid());
-                } else {
-                    // User is signed out
-                    Log.d("Login", "onAuthStateChanged:signed_out");
-                }
-            }
-        };
-    }
-    // Control Firebase auth lifecycle
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null) goToMainView();
-
+        firebase.emailSignIn(email, password);
     }
     @Override
-    public void onStop(){
-        super.onStop();
-        if (mAuthListener != null){
-            mAuth.removeAuthStateListener(mAuthListener);
+    public void onSignInResult(boolean success){
+        if(success){
+            Toast.makeText(LoginActivity.this, "You Have Successfully Logged In",
+                    Toast.LENGTH_SHORT).show();
+            goToMainView();
+        } else {
+            Toast.makeText(LoginActivity.this, "Failed To Log In",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
-    // Firebase SIGN UP a new user
-    public void createNewUser(View view){
-        EditText emailText = (EditText) findViewById(R.id.EmailText);
-        String email = emailText.getText().toString();
-        EditText passwordText = (EditText) findViewById(R.id.PasswordText);
-        String password = passwordText.getText().toString();
 
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    ///     Email Sign Up (FireBase)
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public void emailSignUp(String name, String email, String password, String dob, String belt) {
         if(email.length() < 1 || password.length() < 1){
             Toast.makeText(LoginActivity.this, "Must provide an Email and Password",
                     Toast.LENGTH_SHORT).show();
             return;
         }
-        createNewUserHelp(email, password);
+
+        firebase.emailSignUp(email, password);
     }
-    public void createNewUserHelp(String email, String password){
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("Login", "createUserWithEmail:onComplete:" + task.isSuccessful());
+    @Override
+    public void onSignUpResult(boolean success){
+        if (success) {
+            Toast.makeText(LoginActivity.this, "You have successfully created an account",
+                    Toast.LENGTH_SHORT).show();
+            goToMainView();
+        } else {
+            Toast.makeText(LoginActivity.this, "Authentication Failed",
+                    Toast.LENGTH_SHORT).show();
+        }
 
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, "Authentication Failed",
-                                    Toast.LENGTH_SHORT).show();
-                        } else{
-                            Toast.makeText(LoginActivity.this, "You have successfully created an account",
-                                    Toast.LENGTH_SHORT).show();
-                            goToMainView();
-                        }
+    }
 
-                        // ...
-                    }
-                });
+
+    // Control Firebase auth lifecycle
+    @Override
+    public void onStart() {
+        super.onStart();
+        firebase.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        if(firebase.getCurrentUser() != null) goToMainView();
+
+    }
+    @Override
+    public void onStop(){
+        super.onStop();
+        firebase.onStop();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////
@@ -227,27 +187,18 @@ public class LoginActivity extends AppCompatActivity implements
     }
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d("Login", "firebaseAuthWithGoogle:" + acct.getId());
+        firebase.authWithGoogle(acct);
+    }
+    @Override
+    public void onFirebaseAuthWithGoogleResult(boolean success){
+        if (success) {
+            // Sign in success, update UI with the signed-in user's information
+            Log.d("Login", "signInWithCredential:success");
+        } else {
+            // If sign in fails, display a message to the user.
+            Toast.makeText(LoginActivity.this, "Google to Firebase Authentication failed.",
+                    Toast.LENGTH_SHORT).show();
+        }
 
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("Login", "signInWithCredential:success");
-
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            goToMainView();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("Login", "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Google to Firebase Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-
-                        // ...
-                    }
-                });
     }
 }
