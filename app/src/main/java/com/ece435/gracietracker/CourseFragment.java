@@ -1,17 +1,13 @@
 package com.ece435.gracietracker;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class CourseFragment extends Fragment {
@@ -52,11 +48,6 @@ public class CourseFragment extends Fragment {
 
         // Capture the layout's TextView and set the string as its text
         TextView courseNumberView = (TextView) view.findViewById(R.id.courseNumberView);
-        TextView primaryTechniqueView = (TextView) view.findViewById(R.id.primaryTechniqueView);
-        TextView secondaryTechniqueView = (TextView) view.findViewById(R.id.secondaryTechniqueView);
-
-        ImageButton primaryTechniqueLinkView = (ImageButton) view.findViewById(R.id.primaryTechniqueLinkView);
-        Button secondaryTechniqueLinkView = (Button) view.findViewById(R.id.secondaryTechniqueLinkView);
 
         CheckBox cb0 = (CheckBox) view.findViewById(R.id.checkBox0);
         cb0.setTag(course);
@@ -94,33 +85,21 @@ public class CourseFragment extends Fragment {
         String secondaryTechniqueLink = course.getSecondaryTechniqueLink();
 
 
-        primaryTechniqueLinkView.setOnClickListener( new View.OnClickListener() {
-            public void onClick(View v) {
-                ImageButton link = (ImageButton) v;
-
-                String address = course.getPrimaryTechniqueLink();
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(address));
-                startActivity(i);
-            }
-        });
-        secondaryTechniqueLinkView.setOnClickListener( new View.OnClickListener() {
-            public void onClick(View v) {
-                Button link = (Button) v;
-
-                String address = (String) link.getText();
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(address));
-                startActivity(i);
-            }
-        });
-
         courseNumberView.setText(""+courseNumber);
-        primaryTechniqueView.setText(primaryTechnique);
-        secondaryTechniqueView.setText(secondaryTechnique);
         cb0.setChecked(course.getDidComplete(0));
         cb1.setChecked(course.getDidComplete(1));
         cb2.setChecked(course.getDidComplete(2));
+
+
+
+        SkillListAdapter skillAdapter = new SkillListAdapter(getContext(), R.layout.layout_skill_list_item, course.getAllTechniques());
+        LinearLayout listView = (LinearLayout) view.findViewById(R.id.skillListView);
+
+        final int adapterCount = skillAdapter.getCount();
+        for (int i = 0; i < adapterCount; i++) {
+            View item = skillAdapter.getView(i, null, null);
+            listView.addView(item);
+        }
 
         return view;
     }
