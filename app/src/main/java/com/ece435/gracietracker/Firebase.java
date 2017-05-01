@@ -4,14 +4,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * Created by jdenn on 4/30/2017.
@@ -19,9 +19,15 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public class Firebase {
 
+    //Authentication
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    //Database
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mDatabaseReference;
+
+    //General
     private AppCompatActivity mListener;
 
     public Firebase(AppCompatActivity context){
@@ -50,23 +56,27 @@ public class Firebase {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////
-    ///     Initialize FireBase
+    ///     Initialize Firebase Auth and DB
     ///////////////////////////////////////////////////////////////////////////////////////////
     public void initialize(){
+        //Auth
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user != null) {
-                    // User is signed in
+                    // GracieUser is signed in
                     Log.d("Login", "onAuthStateChanged:signed:_in" + user.getUid());
                 } else {
-                    // User is signed out
+                    // GracieUser is signed out
                     Log.d("Login", "onAuthStateChanged:signed_out");
                 }
             }
         };
+        //DB
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = mFirebaseDatabase.getReference();
     }
     // Control Firebase auth lifecycle
     public void onStart() {
@@ -94,8 +104,6 @@ public class Firebase {
                         } else {
                             ((OnFireBaseInteractionListener) mListener).onSignInResult(false);
                         }
-
-                        // ...
                     }
                 });
     }
@@ -115,8 +123,10 @@ public class Firebase {
                 });
     }
 
-    public void authWithGoogle(GoogleSignInAccount acct){
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    ///     Google Sign In
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    public void authWithGoogle(AuthCredential credential){
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(mListener, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -126,11 +136,17 @@ public class Firebase {
                         } else {
                             ((OnFireBaseInteractionListener) mListener).onFirebaseAuthWithGoogleResult(false);
                         }
-
-                        // ...
                     }
                 });
 
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    ///     Update User
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    public void updateUser(GracieUser user){
+        // Write a message to the database
+        mDatabaseReference.child("users").child(user.uid).setValue(user);
     }
 
 }

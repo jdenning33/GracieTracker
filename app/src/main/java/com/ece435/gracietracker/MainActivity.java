@@ -59,7 +59,7 @@ CourseFragment.OnFragmentInteractionListener{
                 onBackPressed();
                 return true;
             case R.id.action_settings:
-                // User chose the "Settings" item, show the app settings UI...
+                // GracieUser chose the "Settings" item, show the app settings UI...
                 return true;
 
             case R.id.sign_out:

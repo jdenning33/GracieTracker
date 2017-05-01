@@ -15,6 +15,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity implements
         Firebase.OnFireBaseInteractionListener,
@@ -23,9 +26,11 @@ public class LoginActivity extends AppCompatActivity implements
 
     FragmentManager fragmentManager;
 
-    private Firebase firebase;
+    private Firebase fireBase;
     private GoogleApiClient mGoogleApiClient;
     public static final int RC_SIGN_IN = 111;
+
+    private GracieUser gracieUser;
 
     public static final String USER_NAME = "com.ece435.gracietracker.USER_NAME";
 
@@ -34,8 +39,10 @@ public class LoginActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        firebase = new Firebase(this);
-        firebase.initialize();
+        gracieUser = new GracieUser();
+
+        fireBase = new Firebase(this);
+        fireBase.initialize();
         initializeGoogleSignIn();
 
         // Create a fragment manager so that we can initialize the MainFragment
@@ -75,7 +82,7 @@ public class LoginActivity extends AppCompatActivity implements
     ///////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public void emailSignIn(String email, String password){
-        firebase.emailSignIn(email, password);
+        fireBase.emailSignIn(email, password);
     }
     @Override
     public void onSignInResult(boolean success){
@@ -91,7 +98,7 @@ public class LoginActivity extends AppCompatActivity implements
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////
-    ///     Email Sign Up (FireBase)
+    ///     Email Sign Up (Firebase)
     ///////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public void emailSignUp(String name, String email, String password, String dob, String belt) {
@@ -101,13 +108,23 @@ public class LoginActivity extends AppCompatActivity implements
             return;
         }
 
-        firebase.emailSignUp(email, password);
+        gracieUser.currentBelt = 2;
+        gracieUser.preferredName = name;
+        gracieUser.email = email;
+
+        fireBase.emailSignUp(email, password);
     }
     @Override
     public void onSignUpResult(boolean success){
         if (success) {
             Toast.makeText(LoginActivity.this, "You have successfully created an account",
                     Toast.LENGTH_SHORT).show();
+
+            FirebaseUser firebaseUser = fireBase.getCurrentUser();
+            gracieUser.uid = firebaseUser.getUid();
+
+            fireBase.updateUser(gracieUser);
+
             goToMainView();
         } else {
             Toast.makeText(LoginActivity.this, "Authentication Failed",
@@ -121,15 +138,15 @@ public class LoginActivity extends AppCompatActivity implements
     @Override
     public void onStart() {
         super.onStart();
-        firebase.onStart();
+        fireBase.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        if(firebase.getCurrentUser() != null) goToMainView();
+        if(fireBase.getCurrentUser() != null) goToMainView();
 
     }
     @Override
     public void onStop(){
         super.onStop();
-        firebase.onStop();
+        fireBase.onStop();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////
@@ -174,26 +191,24 @@ public class LoginActivity extends AppCompatActivity implements
         if (result.isSuccess()) {
             // Google Sign In was successful, authenticate with Firebase
             GoogleSignInAccount account = result.getSignInAccount();
-            firebaseAuthWithGoogle(account);
+            AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
 
-            Toast.makeText(LoginActivity.this, "You Have Successfully Logged In With Google",
-                    Toast.LENGTH_SHORT).show();
-
-            goToMainView();
+            fireBase.authWithGoogle(credential);
         } else {
             Toast.makeText(LoginActivity.this, "Google Login Unsuccessful",
                     Toast.LENGTH_SHORT).show();
         }
     }
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d("Login", "firebaseAuthWithGoogle:" + acct.getId());
-        firebase.authWithGoogle(acct);
-    }
     @Override
     public void onFirebaseAuthWithGoogleResult(boolean success){
+        Log.d("Login", "signInWithCredential:success");
+
         if (success) {
             // Sign in success, update UI with the signed-in user's information
-            Log.d("Login", "signInWithCredential:success");
+            Toast.makeText(LoginActivity.this, "Google to Firebase Authentication succeeded.",
+                    Toast.LENGTH_SHORT).show();
+
+            goToMainView();
         } else {
             // If sign in fails, display a message to the user.
             Toast.makeText(LoginActivity.this, "Google to Firebase Authentication failed.",
