@@ -45,6 +45,8 @@ public class ReflexListAdapter extends ArrayAdapter<Integer> {
 
         TextView tt1 = (TextView) v.findViewById(R.id.BeltColorText);
         tt1.setText(""+GracieUser.getBeltColor(belt));
+        tt1.setEnabled( gracieUser.currentBelt == belt ? true : false );
+
 
         GridView gridView = (GridView) v.findViewById(R.id.ReflexCheckboxList);
         ArrayList<Bundle> checkBoxBundles = new ArrayList<Bundle>();
@@ -90,6 +92,8 @@ public class ReflexListAdapter extends ArrayAdapter<Integer> {
             CheckBox cb = (CheckBox) v.findViewById(R.id.checkBox);
             cb.setTag(args);
             cb.setChecked(gracieUser.didCompleteReflex(belt, num));
+            cb.setEnabled( gracieUser.currentBelt == belt ? true : false );
+
 
             cb.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {

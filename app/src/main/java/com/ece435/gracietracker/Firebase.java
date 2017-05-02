@@ -127,6 +127,7 @@ public class Firebase {
                     gracieUser = new GracieUser();
                     gracieUser.uid = getFirebaseUser().getUid();
                     gracieUser.email = getFirebaseUser().getEmail();
+                    gracieUser.preferredName = gracieUser.email;
                     GRACIEUSER.update(gracieUser);
                     mListenerDB.onInitialGracieUserUpdate();
                     Log.e("Firebase", "null user snapshot");

@@ -17,7 +17,7 @@ public class GracieUser {
     public String uid = "Change";
 
 //    public Date dob;
-    public int currentBelt = 0; //0=needtochange, 1 = White
+    public int currentBelt = 1; //0=needtochange, 1 = White
 //    public boolean[][][] courseCompletions; // [Belt][Course][Class]
 //    public boolean[][] reflexCourseCompletions; // [Belt][Class]
 
