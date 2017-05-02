@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DrawableUtils;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,22 +23,26 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MainActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener,
 CalendarFragment.OnFragmentInteractionListener,
 CourseListFragment.OnFragmentInteractionListener,
-CourseFragment.OnFragmentInteractionListener{
+CourseFragment.OnFragmentInteractionListener,
+Firebase.OnFireBaseInteractionListenerDB{
 
     FragmentManager fragmentManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Firebase.initializeDB(this);
+
         // Set the toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        // Create a fragment manager so that we can initialize the MainFragment
+        // Create a fragment manager so that we can initializeAuth the MainFragment
         fragmentManager = getSupportFragmentManager();
-        goToHomeFragment();
+//        goToHomeFragment();
     }
     public void goToLoginView(View view) {
         goToLoginViewHelp();
@@ -48,6 +53,11 @@ CourseFragment.OnFragmentInteractionListener{
         finish();
     }
 
+    @Override
+    public void onBackPressed(){
+        Firebase.commitGracieUserToDB();
+        super.onBackPressed();
+    }
 
     ///////////////////////////////////////////////////////////////////////////////////////////
     ///     Action Bar Initialization
@@ -64,6 +74,7 @@ CourseFragment.OnFragmentInteractionListener{
 
             case R.id.sign_out:
                 FirebaseAuth.getInstance().signOut();
+                Firebase.resetCurrentUser();
                 goToLoginViewHelp();
                 return true;
 
@@ -81,11 +92,26 @@ CourseFragment.OnFragmentInteractionListener{
 
         ActionBar ab = getSupportActionBar();
         if (ab != null) {
-            ab.setDisplayHomeAsUpEnabled(true);
+            ab.setDisplayHomeAsUpEnabled(false);
             ab.setBackgroundDrawable(new ColorDrawable(
                     ContextCompat.getColor(this, R.color.colorSupportActionBar)));
             ab.show();
         }
+
+        FragmentManager.OnBackStackChangedListener backStackListener =  new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+
+                int position = getSupportFragmentManager().getBackStackEntryCount();
+                if(position!=0){
+                    FragmentManager.BackStackEntry backEntry=getSupportFragmentManager().getBackStackEntryAt(position-1);
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                }else{
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                }
+            }
+        };
+        getSupportFragmentManager().addOnBackStackChangedListener(backStackListener);
 
         return true;
     }
@@ -121,5 +147,18 @@ CourseFragment.OnFragmentInteractionListener{
         fragmentTransaction.replace(R.id.MainFragment, courseFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////
+    ///     Firebase DB Listener
+    /////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public void onInitialGracieUserUpdate() {
+        goToHomeFragment();
+    }
+    @Override
+    public void reinitializeDatabase() {
+        Firebase.initializeDB(this);
     }
 }

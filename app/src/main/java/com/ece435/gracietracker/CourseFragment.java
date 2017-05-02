@@ -55,17 +55,18 @@ public class CourseFragment extends Fragment {
         cb1 = (CheckBox) view.findViewById(R.id.completed1);
         cb2 = (CheckBox) view.findViewById(R.id.completed2);
 
-        ProgressCheckBoxes checkBoxes = new ProgressCheckBoxes(course, cb0, cb1, cb2);
+        final int coursenum = course.getNumber();
+        final GracieUser curUser = Firebase.getGracieUser();
 
         cb0.setTag(course);
-        cb0.setChecked(course.getDidComplete(0));
-        cb0.setOnClickListener(new View.OnClickListener() {
+        cb0.setChecked(curUser.didCompleteCourse(coursenum, 0));
+        cb0.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
                 CheckBox cb = (CheckBox) v;
                 Course course = (Course) cb.getTag();
-                course.toggleComplete(0);
+                curUser.toggleCompletedCourse(coursenum, 0);
 
-                if (!course.getDidComplete(0) || !course.getDidComplete(1)) {
+                if(!curUser.didCompleteCourse(coursenum, 0) || !curUser.didCompleteCourse(coursenum, 1)){
                     cb2.setEnabled(false);
                 } else {
                     cb2.setEnabled(true);
@@ -73,14 +74,14 @@ public class CourseFragment extends Fragment {
             }
         });
         cb1.setTag(course);
-        cb1.setChecked(course.getDidComplete(1));
-        cb1.setOnClickListener(new View.OnClickListener() {
+        cb1.setChecked(curUser.didCompleteCourse(coursenum, 1));
+        cb1.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
                 CheckBox cb = (CheckBox) v;
                 Course course = (Course) cb.getTag();
-                course.toggleComplete(1);
+                curUser.toggleCompletedCourse(coursenum, 1);
 
-                if (!course.getDidComplete(0) || !course.getDidComplete(1)) {
+                if(!curUser.didCompleteCourse(coursenum, 0) || !curUser.didCompleteCourse(coursenum, 1)){
                     cb2.setEnabled(false);
                 } else {
                     cb2.setEnabled(true);
@@ -88,14 +89,14 @@ public class CourseFragment extends Fragment {
             }
         });
         cb2.setTag(course);
-        cb2.setChecked(course.getDidComplete(2));
-        cb2.setOnClickListener(new View.OnClickListener() {
+        cb2.setChecked(curUser.didCompleteCourse(coursenum, 2));
+        cb2.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
                 CheckBox cb = (CheckBox) v;
                 Course course = (Course) cb.getTag();
-                course.toggleComplete(2);
+                curUser.toggleCompletedCourse(coursenum, 2);
 
-                if (course.getDidComplete(2)) {
+                if(curUser.didCompleteCourse(coursenum, 2) ){
                     cb0.setEnabled(false);
                     cb1.setEnabled(false);
                 } else {
@@ -104,29 +105,27 @@ public class CourseFragment extends Fragment {
                 }
             }
         });
-        if(!course.getDidComplete(0) || !course.getDidComplete(1)){
+        if(!curUser.didCompleteCourse(coursenum, 0) || !curUser.didCompleteCourse(coursenum, 1)){
             cb2.setEnabled(false);
         } else {
             cb2.setEnabled(true);
         }
-        if(course.getDidComplete(2)){
+        if(curUser.didCompleteCourse(coursenum, 2)){
             cb0.setEnabled(false);
             cb1.setEnabled(false);
-        }else {
+        }else{
             cb0.setEnabled(true);
             cb1.setEnabled(true);
         }
 
 
-
-        int courseNumber = course.getNumber();
         String primaryTechnique = course.getPrimaryTechnique();
         String secondaryTechnique = course.getSecondaryTechnique();
         String primaryTechniqueLink = course.getPrimaryTechniqueLink();
         String secondaryTechniqueLink = course.getSecondaryTechniqueLink();
 
 
-        courseNumberView.setText(""+courseNumber);
+        courseNumberView.setText(""+coursenum);
 
         SkillListAdapter skillAdapter = new SkillListAdapter(getContext(), R.layout.layout_skill_list_item, course.getAllTechniques());
         LinearLayout listView = (LinearLayout) view.findViewById(R.id.skillListView);

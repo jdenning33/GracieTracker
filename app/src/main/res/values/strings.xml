@@ -46,5 +46,8 @@
     <string name="email">e-mail</string>
     <string name="birthday">birthday (mm/dd/yyyy)</string>
     <string name="sign_up">Sign Up</string>
+    <string name="confirm">confirm</string>
+    <string name="progress_snapshot">Progress Snapshot</string>
+    <string name="belt">Belt</string>
 
 </resources>

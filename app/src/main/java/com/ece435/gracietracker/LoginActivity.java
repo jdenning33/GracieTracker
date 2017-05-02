@@ -16,21 +16,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity implements
-        Firebase.OnFireBaseInteractionListener,
+        Firebase.OnFireBaseInteractionListenerAuth,
         SignInFragment.OnFragmentInteractionListener,
         SignUpFragment.OnFragmentInteractionListener{
 
     FragmentManager fragmentManager;
 
-    private Firebase fireBase;
     private GoogleApiClient mGoogleApiClient;
     public static final int RC_SIGN_IN = 111;
-
-    private GracieUser gracieUser;
 
     public static final String USER_NAME = "com.ece435.gracietracker.USER_NAME";
 
@@ -39,13 +35,10 @@ public class LoginActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        gracieUser = new GracieUser();
-
-        fireBase = new Firebase(this);
-        fireBase.initialize();
+        Firebase.initializeAuth(this);
         initializeGoogleSignIn();
 
-        // Create a fragment manager so that we can initialize the MainFragment
+        // Create a fragment manager so that we can initializeAuth the MainFragment
         fragmentManager = getSupportFragmentManager();
         goToSignInFragment();
     }
@@ -82,7 +75,7 @@ public class LoginActivity extends AppCompatActivity implements
     ///////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public void emailSignIn(String email, String password){
-        fireBase.emailSignIn(email, password);
+        Firebase.emailSignIn(email, password);
     }
     @Override
     public void onSignInResult(boolean success){
@@ -101,30 +94,26 @@ public class LoginActivity extends AppCompatActivity implements
     ///     Email Sign Up (Firebase)
     ///////////////////////////////////////////////////////////////////////////////////////////
     @Override
-    public void emailSignUp(String name, String email, String password, String dob, String belt) {
+    public void emailSignUp(String email, String password, String cPassword) {
         if(email.length() < 1 || password.length() < 1){
             Toast.makeText(LoginActivity.this, "Must provide an Email and Password",
                     Toast.LENGTH_SHORT).show();
             return;
         }
+        if(!password.contentEquals(cPassword)){
+            Log.e("FuckMe", password + " " +cPassword);
+            Toast.makeText(LoginActivity.this, "Passwords don't match",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        gracieUser.currentBelt = 2;
-        gracieUser.preferredName = name;
-        gracieUser.email = email;
-
-        fireBase.emailSignUp(email, password);
+        Firebase.emailSignUp(email, password);
     }
     @Override
     public void onSignUpResult(boolean success){
         if (success) {
             Toast.makeText(LoginActivity.this, "You have successfully created an account",
                     Toast.LENGTH_SHORT).show();
-
-            FirebaseUser firebaseUser = fireBase.getCurrentUser();
-            gracieUser.uid = firebaseUser.getUid();
-
-            fireBase.updateUser(gracieUser);
-
             goToMainView();
         } else {
             Toast.makeText(LoginActivity.this, "Authentication Failed",
@@ -138,15 +127,15 @@ public class LoginActivity extends AppCompatActivity implements
     @Override
     public void onStart() {
         super.onStart();
-        fireBase.onStart();
+        Firebase.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        if(fireBase.getCurrentUser() != null) goToMainView();
+        if(Firebase.getFirebaseUser() != null) goToMainView();
 
     }
     @Override
     public void onStop(){
         super.onStop();
-        fireBase.onStop();
+        Firebase.onStop();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////
@@ -193,7 +182,7 @@ public class LoginActivity extends AppCompatActivity implements
             GoogleSignInAccount account = result.getSignInAccount();
             AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
 
-            fireBase.authWithGoogle(credential);
+            Firebase.authWithGoogle(credential);
         } else {
             Toast.makeText(LoginActivity.this, "Google Login Unsuccessful",
                     Toast.LENGTH_SHORT).show();

@@ -72,24 +72,19 @@ public class SignUpFragment extends Fragment implements View.OnClickListener{
      * activity.
      */
     public interface OnFragmentInteractionListener {
-        void emailSignUp(String name, String email, String password, String dob, String belt);
+        void emailSignUp(String name, String email, String password);
         void goToSignInFragment();
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.EmailSignUpButton:
-                EditText nameText = (EditText) getView().findViewById(R.id.PreferredNameText);
-                String name = nameText.getText().toString();
-                EditText dobText = (EditText) getView().findViewById(R.id.DobText);
-                String dob = dobText.getText().toString();
-                Spinner currentBeltSpinner = (Spinner) getView().findViewById(R.id.CurrentBeltSpinner);
-//                String belt = currentBeltSpinner.getFocusedChild().toString();
-                String belt = "";
                 EditText emailText = (EditText) getView().findViewById(R.id.EmailText);
                 String email = emailText.getText().toString();
                 EditText passwordText = (EditText) getView().findViewById(R.id.PasswordText);
                 String password = passwordText.getText().toString();
+                EditText cPassordText = (EditText) getView().findViewById(R.id.ConfirmPasswordText);
+                String cPassword = cPassordText.getText().toString();
 
                 if(email.length() < 1 || password.length() < 1){
                     Toast.makeText(getActivity(), "Must provide an Email and Password",
@@ -98,7 +93,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener{
                 }
                 Toast.makeText(getActivity(), "Signing Up",
                         Toast.LENGTH_SHORT).show();
-                mListener.emailSignUp(name, email, password, dob, belt);
+                mListener.emailSignUp(email, password, cPassword);
 
                 break;
             case R.id.SignInExistingButton:

@@ -1,23 +1,16 @@
 package com.ece435.gracietracker;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.TextView;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 
 /**
@@ -27,14 +20,6 @@ import com.google.firebase.auth.FirebaseUser;
  * to handle interaction events.
  */
 public class HomeFragment extends Fragment implements OnClickListener {
-
-    private String email = "";
-    private String uid = "";
-
-
-    // TODO: Rename and change types of parameters
-    private String courseTitle;
-    private String courseDescription;
 
     private HomeFragment.OnFragmentInteractionListener mListener;
 
@@ -56,20 +41,6 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
         if (getArguments() != null) {
         }
-
-        // Load the user profile
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            // Name, email address, and profile photo Url
-            String name = user.getDisplayName();
-            email = user.getEmail();
-            Uri photoUrl = user.getPhotoUrl();
-
-            // The user's ID, unique to the Firebase project. Do NOT use this value to
-            // authenticate with your backend server, if you have one. Use
-            // FirebaseUser.getToken() instead.
-            uid = user.getUid();
-        }
     }
 
     @Override
@@ -78,26 +49,40 @@ public class HomeFragment extends Fragment implements OnClickListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        // Load the user profile
+        GracieUser gracieUser = Firebase.getGracieUser();
+
         // Capture the layout's TextView and set the email as its text
         TextView nameView = (TextView) view.findViewById(R.id.UserNameView);
-        nameView.setText( email );
+        nameView.setText( gracieUser.preferredName );
 
         TextView currentBeltText = (TextView) view.findViewById(R.id.CurrentBeltText);
-        currentBeltText.setText( getCurrentBelt(uid) );
+        currentBeltText.setText( GracieUser.getBeltColor(gracieUser.currentBelt) );
 
         TextView nextBeltText = (TextView) view.findViewById(R.id.NextBeltText);
-        nextBeltText.setText( getNextBelt(uid) );
+        nextBeltText.setText( GracieUser.getBeltColor(gracieUser.currentBelt + 1) );
 
         TextView coursesNeededText = (TextView) view.findViewById(R.id.CoursesNeededText);
-        coursesNeededText.setText( getCoursesNeeded(uid) );
+        coursesNeededText.setText( ""+gracieUser.getNumCoursesTilNext() );
 
+
+        CourseListAdapterSnapshot courseAdapter = new CourseListAdapterSnapshot(getContext(), R.layout.layout_course_list_item, Course.courseArray);
+        GridView gridView = (GridView) view.findViewById(R.id.CourseGridView);
+        int columns = 3;
+        gridView.setNumColumns(columns);
+        gridView.setAdapter(courseAdapter);
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                mListener.goToCourseView(position);
+            }
+        });
 
         ((Button) view.findViewById(R.id.CoursesButton)).setOnClickListener(this);
         ((Button) view.findViewById(R.id.CalendarButton)).setOnClickListener(this);
 
         return view;
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -135,22 +120,4 @@ public class HomeFragment extends Fragment implements OnClickListener {
                 break;
         }
     }
-
-
-    private String getName(String userID) {
-        return "Droid Guy";
-    }
-
-    private String getCurrentBelt(String userID) {
-        return "Yellow";
-    }
-
-    private String getNextBelt(String userID) {
-        return "Blue";
-    }
-
-    private String getCoursesNeeded(String userID) {
-        return "14";
-    }
-
 }

@@ -1,26 +1,23 @@
 package com.ece435.gracietracker;
 
-import android.util.Log;
-
-import java.io.Console;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Random;
 
 /**
  * Created by jdenn on 4/28/2017.
  */
 
 public class GracieUser {
-    public String preferredName;
-    public String email;
-    public String uid;
+//    private static GracieUser CURRENTUSER;
+
+    public String preferredName = "Change";
+    public String email = "Change";
+    public String uid = "Change";
 
 //    public Date dob;
-    public int currentBelt; //1 = White
+    public int currentBelt = 0; //0=needtochange, 1 = White
 //    public boolean[][][] courseCompletions; // [Belt][Course][Class]
 //    public boolean[][] reflexCourseCompletions; // [Belt][Class]
 
@@ -32,35 +29,65 @@ public class GracieUser {
     private static final char NEXT_ITEM = ',';
 
     public GracieUser() {
-        Log.e("FuckMe", "new gracie user ");
-
 //        currentBelt = isYouth(dob) ? 1 : 5;
-        Random random = new Random();
 
-        //Initialize Course Completions -- 7 belts, 23 courses, 3 classes each
-        courseCompletions = new Boolean[7][23][3];
+        //Initialize Course Completions -- 15 belts, 23 courses, 3 classes each
+        courseCompletions = new Boolean[15][23][3];
         for(Boolean[][] bool2 : courseCompletions){
             for(Boolean[] bool1 : bool2){
                 for(int i=0; i<bool1.length; i++){
-                    bool1[i] = random.nextBoolean();
+                    bool1[i] = false;
                 }
             }
         }
         courseCompletionsString = serialize3d(courseCompletions);
 
-        //Initialize relfexCourseCompletions -- 7 belts, 12 RD courses
-        reflexCourseCompletions = new Boolean[7][12];
+        //Initialize relfexCourseCompletions -- 15 belts, 12 RD courses
+        reflexCourseCompletions = new Boolean[15][12];
         for(Boolean[] bool1 : reflexCourseCompletions){
             for(int i=0; i<bool1.length; i++){
-                bool1[i] = random.nextBoolean();
+                bool1[i] = false;
             }
         }
         reflexCourseCompletionsString = serialize2d(reflexCourseCompletions);
-        Log.e("FuckMe", ""+ reflexCourseCompletionsString);
-        reflexCourseCompletions = deserialize2d(reflexCourseCompletionsString);
-        reflexCourseCompletionsString = serialize2d(reflexCourseCompletions);
-        Log.e("FuckMe", ""+ reflexCourseCompletionsString);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    ///     Skill Course Methods
+    ////////////////////////////////////////////////////////////////////////////////////
+    public boolean didCompleteCourse(int course, int num){
+        return didCompleteCourse(currentBelt, course, num);
+    }
+    public boolean didCompleteCourse(int belt, int course, int num){
+        return courseCompletions[belt][course-1][num];
+    }
+    public void toggleCompletedCourse(int course, int num){
+        toggleCompletedCourse(currentBelt, course, num);
+    }
+    public void toggleCompletedCourse(int belt, int course, int num){
+        courseCompletions[belt][course-1][num] = !courseCompletions[belt][course-1][num];
+        courseCompletionsString = serialize3d(courseCompletions);
+        Firebase.commitGracieUserToDB();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    ///     Reflex Course Methods
+    ////////////////////////////////////////////////////////////////////////////////////
+    public boolean didCompleteReflex(int num){
+        return didCompleteReflex(currentBelt, num);
+    }
+    public boolean didCompleteReflex(int belt, int num){
+        return reflexCourseCompletions[belt][num];
+    }
+    public void toggleCompletedReflex(int num){
+        toggleCompletedReflex(currentBelt, num);
+    }
+    public void toggleCompletedReflex(int belt, int num){
+        reflexCourseCompletions[belt][num] = !reflexCourseCompletions[belt][num];
+        reflexCourseCompletionsString = serialize2d(reflexCourseCompletions);
+        Firebase.commitGracieUserToDB();
+    }
+
 
     public boolean isYouth(Date birthday){
         Calendar cal = GregorianCalendar.getInstance();
@@ -73,6 +100,53 @@ public class GracieUser {
         else return false;
     }
 
+    public void update(GracieUser gracieUser){
+        this.preferredName = gracieUser.preferredName;
+        this.currentBelt = gracieUser.currentBelt;
+        this.courseCompletionsString = gracieUser.courseCompletionsString;
+        this.courseCompletions = deserialize3d(courseCompletionsString);
+        this.reflexCourseCompletionsString = gracieUser.reflexCourseCompletionsString;
+        this.reflexCourseCompletions = deserialize2d(reflexCourseCompletionsString);
+    }
+
+    public static String getBeltColor(int coursenum){
+        switch (coursenum){
+            case 0: return "Change";
+            case 1: return "White";
+            case 2: return "Grey";
+            case 3: return "Yellow-White";
+            case 4: return "Yellow";
+            case 5: return "Orange-White";
+            case 6: return "Orange";
+            case 7: return "Green-White";
+            case 8: return "Green";
+            case 9: return "Blue-White";
+            case 10: return "Blue";
+            case 11: return "Purple";
+            case 12: return "Brown";
+            case 13: return "Black";
+            case 14: return "Black+";
+            default: return "Undefined";
+        }
+    }
+
+    public int getNumCoursesTilNext(){
+        int x = getNumCoursesTaken(currentBelt);
+        return 45-x;
+    }
+
+    public int getNumCoursesTaken(int belt){
+        int numTaken = 0;
+        for(Boolean[] bool1d : courseCompletions[belt]){
+            for(int i=0; i<3; i++) if(bool1d[i]) numTaken++;
+        }
+        return numTaken;
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////
+    ///     Serializer and de-serializer methods for classProgress arrays
+    //////////////////////////////////////////////////////////////////////////////////////
     public String serialize3d(Boolean[][][] bool3d){
         String string = "";
 

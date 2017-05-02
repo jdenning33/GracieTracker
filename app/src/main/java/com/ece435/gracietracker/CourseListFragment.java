@@ -11,6 +11,8 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TabHost;
 
+import java.util.ArrayList;
+
 public class CourseListFragment extends Fragment {
     public static final String COURSE_ID = "com.ece435.gracietracker.courseID";
 
@@ -48,7 +50,7 @@ public class CourseListFragment extends Fragment {
         FrameLayout tab1 = (FrameLayout) view.findViewById(R.id.course_list);
         View view1 = inflater.inflate(R.layout.tab_course_list, tab1, true);
         CourseListAdapter courseAdapter = new CourseListAdapter(getContext(), R.layout.layout_course_list_item, Course.courseArray);
-        ListView listView1 = (ListView) view1.findViewById(R.id.CourseList);
+        ListView listView1 = (ListView) view1.findViewById(R.id.CourseGridView);
         listView1.setAdapter(courseAdapter);
 
         listView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -56,6 +58,22 @@ public class CourseListFragment extends Fragment {
                 mListener.goToCourseView(position);
             }
         });
+
+        // Inflate Tab2 for the tab layout
+        ArrayList<Integer> ints = new ArrayList<Integer>();
+        for(int i=1; i<15; i++) ints.add(i);
+        FrameLayout tab2 = (FrameLayout) view.findViewById(R.id.reflex_list);
+        View view2 = inflater.inflate(R.layout.tab_reflex_list, tab2, true);
+        ReflexListAdapter reflexAdapter = new ReflexListAdapter(getContext(), R.layout.layout_reflex_list_item, ints);
+        ListView listView2 = (ListView) view2.findViewById(R.id.ReflexCoursesList);
+        listView2.setAdapter(reflexAdapter);
+
+        listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                mListener.goToCourseView(position);
+            }
+        });
+
 
         //Add Tab 1 to the host
         TabHost.TabSpec spec = host.newTabSpec("Skill Courses");
@@ -65,7 +83,7 @@ public class CourseListFragment extends Fragment {
 
         //Tab 2
         spec = host.newTabSpec("Reflex Development");
-        spec.setContent(R.id.tab2);
+        spec.setContent(R.id.reflex_list);
         spec.setIndicator("Reflex Development");
         host.addTab(spec);
 
@@ -84,6 +102,7 @@ public class CourseListFragment extends Fragment {
     }
     @Override
     public void onDetach() {
+        Firebase.commitGracieUserToDB();
         super.onDetach();
         mListener = null;
     }
