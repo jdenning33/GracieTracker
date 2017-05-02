@@ -41,5 +41,13 @@
     <string name="technique">Technique</string>
     <string name="techniques">Techniques</string>
     <string name="reflex_development">Reflex Development Courses</string>
+    <string name="sign_in_existing">sign in to an existing account</string>
+    <string name="preferred_name">preferred name</string>
+    <string name="email">e-mail</string>
+    <string name="birthday">birthday (mm/dd/yyyy)</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="confirm">confirm</string>
+    <string name="progress_snapshot">Progress Snapshot</string>
+    <string name="belt">Belts</string>
 
 </resources>

@@ -49,48 +49,83 @@ public class CourseFragment extends Fragment {
         // Capture the layout's TextView and set the string as its text
         TextView courseNumberView = (TextView) view.findViewById(R.id.courseNumberView);
 
-        CheckBox cb0 = (CheckBox) view.findViewById(R.id.checkBox0);
-        cb0.setTag(course);
-        CheckBox cb1 = (CheckBox) view.findViewById(R.id.checkBox1);
-        cb1.setTag(course);
-        CheckBox cb2 = (CheckBox) view.findViewById(R.id.checkBox2);
-        cb2.setTag(course);
+        final CheckBox cb0,cb1,cb2;
 
+        cb0 = (CheckBox) view.findViewById(R.id.completed0);
+        cb1 = (CheckBox) view.findViewById(R.id.completed1);
+        cb2 = (CheckBox) view.findViewById(R.id.completed2);
+
+        final int coursenum = course.getNumber();
+        final GracieUser curUser = Firebase.getGracieUser();
+
+        cb0.setTag(course);
+        cb0.setChecked(curUser.didCompleteCourse(coursenum, 0));
         cb0.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
                 CheckBox cb = (CheckBox) v;
                 Course course = (Course) cb.getTag();
-                course.toggleComplete(0);
+                curUser.toggleCompletedCourse(coursenum, 0);
+
+                if(!curUser.didCompleteCourse(coursenum, 0) || !curUser.didCompleteCourse(coursenum, 1)){
+                    cb2.setEnabled(false);
+                } else {
+                    cb2.setEnabled(true);
+                }
             }
         });
+        cb1.setTag(course);
+        cb1.setChecked(curUser.didCompleteCourse(coursenum, 1));
         cb1.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
                 CheckBox cb = (CheckBox) v;
                 Course course = (Course) cb.getTag();
-                course.toggleComplete(1);
+                curUser.toggleCompletedCourse(coursenum, 1);
+
+                if(!curUser.didCompleteCourse(coursenum, 0) || !curUser.didCompleteCourse(coursenum, 1)){
+                    cb2.setEnabled(false);
+                } else {
+                    cb2.setEnabled(true);
+                }
             }
         });
-//            cb2.setOnClickListener( new View.OnClickListener() {
-//                public void onClick(View v) {
-//                    CheckBox cb = (CheckBox) v;
-//                    Course course = (Course) cb.getTag();
-//                    course.toggleComplete(2);
-//                }
-//            });
+        cb2.setTag(course);
+        cb2.setChecked(curUser.didCompleteCourse(coursenum, 2));
+        cb2.setOnClickListener( new View.OnClickListener() {
+            public void onClick(View v) {
+                CheckBox cb = (CheckBox) v;
+                Course course = (Course) cb.getTag();
+                curUser.toggleCompletedCourse(coursenum, 2);
 
-        int courseNumber = course.getNumber();
+                if(curUser.didCompleteCourse(coursenum, 2) ){
+                    cb0.setEnabled(false);
+                    cb1.setEnabled(false);
+                } else {
+                    cb0.setEnabled(true);
+                    cb1.setEnabled(true);
+                }
+            }
+        });
+        if(!curUser.didCompleteCourse(coursenum, 0) || !curUser.didCompleteCourse(coursenum, 1)){
+            cb2.setEnabled(false);
+        } else {
+            cb2.setEnabled(true);
+        }
+        if(curUser.didCompleteCourse(coursenum, 2)){
+            cb0.setEnabled(false);
+            cb1.setEnabled(false);
+        }else{
+            cb0.setEnabled(true);
+            cb1.setEnabled(true);
+        }
+
+
         String primaryTechnique = course.getPrimaryTechnique();
         String secondaryTechnique = course.getSecondaryTechnique();
         String primaryTechniqueLink = course.getPrimaryTechniqueLink();
         String secondaryTechniqueLink = course.getSecondaryTechniqueLink();
 
 
-        courseNumberView.setText(""+courseNumber);
-        cb0.setChecked(course.getDidComplete(0));
-        cb1.setChecked(course.getDidComplete(1));
-        cb2.setChecked(course.getDidComplete(2));
-
-
+        courseNumberView.setText(""+coursenum);
 
         SkillListAdapter skillAdapter = new SkillListAdapter(getContext(), R.layout.layout_skill_list_item, course.getAllTechniques());
         LinearLayout listView = (LinearLayout) view.findViewById(R.id.skillListView);

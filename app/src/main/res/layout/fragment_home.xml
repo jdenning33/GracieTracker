@@ -10,22 +10,23 @@
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="8dp"
         android:text="@string/calendar"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/space2"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/CoursesButton" />
 
     <Button
         android:id="@+id/CoursesButton"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="9dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="4dp"
         android:text="@string/courses_and_videos"
@@ -33,7 +34,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/space2" />
+        app:layout_constraintRight_toLeftOf="@+id/space2"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@+id/CoursesNeededView"
+        app:layout_constraintVertical_bias="0.002" />
 
     <TextView
         android:id="@+id/UserNameView"
@@ -48,13 +54,14 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/ProfileImage"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="RtlHardcoded" />
+        tools:ignore="RtlHardcoded"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/NextBeltView"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
         android:layout_marginTop="8dp"
         android:text="@string/next_belt"
         app:layout_constraintLeft_toLeftOf="@+id/UserNameView"
@@ -65,7 +72,6 @@
         android:id="@+id/CoursesNeededView"
         android:layout_width="150dp"
         android:layout_height="21dp"
-        android:layout_marginLeft="0dp"
         android:layout_marginTop="8dp"
         android:text="@string/courses_needed"
         app:layout_constraintLeft_toLeftOf="@+id/UserNameView"
@@ -76,14 +82,14 @@
         android:id="@+id/CurrentBeltView"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
         android:layout_marginTop="8dp"
         android:text="@string/current_belt"
         app:layout_constraintLeft_toLeftOf="@+id/UserNameView"
         app:layout_constraintTop_toBottomOf="@+id/UserNameView"
         app:layout_constraintRight_toLeftOf="@+id/NextBeltText"
         android:layout_marginRight="8dp"
-        tools:ignore="RtlHardcoded" />
+        tools:ignore="RtlHardcoded"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/NextBeltText"
@@ -95,7 +101,9 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/NextBeltView"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/NextBeltView"
-        app:layout_constraintRight_toLeftOf="@+id/ProfileImage" />
+        app:layout_constraintRight_toLeftOf="@+id/ProfileImage"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/CoursesNeededText"
@@ -107,7 +115,9 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/CoursesNeededView"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/NextBeltView"
-        app:layout_constraintRight_toLeftOf="@+id/ProfileImage" />
+        app:layout_constraintRight_toLeftOf="@+id/ProfileImage"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/CurrentBeltText"
@@ -119,7 +129,9 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/CurrentBeltView"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/CurrentBeltView"
-        app:layout_constraintRight_toLeftOf="@+id/ProfileImage" />
+        app:layout_constraintRight_toLeftOf="@+id/ProfileImage"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <ImageView
         android:id="@+id/ProfileImage"
@@ -131,7 +143,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/sym_def_app_icon"
-        tools:ignore="RtlHardcoded" />
+        tools:ignore="RtlHardcoded"
+        android:layout_marginEnd="16dp" />
 
     <Space
         android:layout_width="wrap_content"
@@ -142,35 +155,71 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:id="@+id/space2" />
+        android:id="@+id/space2"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/SuggestedCourseView"
         android:layout_width="186dp"
         android:layout_height="23dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="17dp"
-        android:text="@string/suggested_course"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/progress_snapshot"
         android:textAlignment="center"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/CoursesNeededView" />
+        app:layout_constraintTop_toBottomOf="@+id/CoursesButton" />
 
-    <TextView
-        android:id="@+id/textView"
+    <!--<ScrollView-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:paddingBottom="20dp"-->
+        <!--app:layout_constraintBottom_toTopOf="@+id/space2"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/SuggestedCourseView">-->
+
+    <GridView
+        android:id="@+id/CourseGridView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/replace"
+        app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SuggestedCourseView" />
+        app:layout_constraintTop_toBottomOf="@+id/SuggestedCourseView"
+        android:layout_marginBottom="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/space2" />
+
+    <!--&lt;!&ndash;<FrameLayout&ndash;&gt;-->
+        <!--&lt;!&ndash;android:id="@+id/CourseSnapshotGrid"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_width="0dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_height="0dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_marginBottom="8dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_marginEnd="8dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_marginLeft="8dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_marginRight="8dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_marginStart="8dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_marginTop="8dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:columnCount="3"&ndash;&gt;-->
+        <!--&lt;!&ndash;app:layout_constraintBottom_toBottomOf="@+id/space2"&ndash;&gt;-->
+        <!--&lt;!&ndash;app:layout_constraintHorizontal_bias="1.0"&ndash;&gt;-->
+        <!--&lt;!&ndash;app:layout_constraintLeft_toLeftOf="parent"&ndash;&gt;-->
+        <!--&lt;!&ndash;app:layout_constraintRight_toRightOf="parent"&ndash;&gt;-->
+        <!--&lt;!&ndash;app:layout_constraintTop_toBottomOf="@+id/SuggestedCourseView"&ndash;&gt;-->
+        <!--&lt;!&ndash;app:layout_constraintVertical_bias="0.0">&ndash;&gt;-->
+
+    <!--</FrameLayout>-->
+    <!--</ScrollView>-->
 
 </android.support.constraint.ConstraintLayout>
 

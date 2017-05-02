@@ -21,9 +21,6 @@ public class Course {
     private int[] primarySkills;    //Bolded technique on the course description
     private int[] secondarySkills;  //Second technique on the description
 
-    //booleans for how many times the course has been completed on this belt
-    private boolean[] didComplete = new boolean[] {false, false, false};
-
     private Date[] courseOfferings; //array of when the course is planned to be taught
 
 
@@ -31,10 +28,6 @@ public class Course {
         this.number = number;
         this.primarySkills = primarySkills;
         this.secondarySkills = secondarySkills;
-    }
-
-    public void toggleComplete(int number){
-        didComplete[number] = !didComplete[number];
     }
 
     public int getNumber(){ return number; }
@@ -62,10 +55,6 @@ public class Course {
     public String getSecondaryTechniqueLink(){
         return Skill.skillArray.get(secondarySkills[0]-1).getLink();
     }
-    public boolean getDidComplete(int number){
-        return didComplete[number];
-    }
-
 
 
     //List of all Gracie Course offerings

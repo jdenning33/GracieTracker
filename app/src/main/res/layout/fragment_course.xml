@@ -33,16 +33,16 @@
         android:layout_marginStart="8dp" />
 
     <CheckBox
-        android:id="@+id/checkBox0"
+        android:id="@+id/completed0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toLeftOf="@+id/checkBox1"
+        app:layout_constraintRight_toLeftOf="@+id/completed1"
         app:layout_constraintTop_toBottomOf="@+id/Progress" />
 
     <CheckBox
-        android:id="@+id/checkBox1"
+        android:id="@+id/completed1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -71,12 +71,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox
-        android:id="@+id/checkBox2"
+        android:id="@+id/completed2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        app:layout_constraintLeft_toRightOf="@+id/checkBox1"
+        app:layout_constraintLeft_toRightOf="@+id/completed1"
         app:layout_constraintTop_toBottomOf="@+id/Progress" />
 
     <ScrollView
@@ -88,7 +88,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox0"
+        app:layout_constraintTop_toBottomOf="@+id/completed0"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp">
 

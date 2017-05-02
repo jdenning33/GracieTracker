@@ -14,13 +14,13 @@ import java.util.List;
  * Created by jdenn on 4/17/2017.
  */
 
-public class CourseListAdapter extends ArrayAdapter<Course> {
+public class CourseListAdapterSnapshot extends ArrayAdapter<Course> {
 
-    public CourseListAdapter(Context context, int textViewResourceId) {
+    public CourseListAdapterSnapshot(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
     }
 
-    public CourseListAdapter(Context context, int resource, List<Course> items) {
+    public CourseListAdapterSnapshot(Context context, int resource, List<Course> items) {
         super(context, resource, items);
     }
 
@@ -32,7 +32,7 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.layout_course_list_item, null);
+            v = vi.inflate(R.layout.layout_course_snapshot_item, null);
         }
 
         final CheckBox cb0 = (CheckBox) v.findViewById(R.id.completed0);
@@ -40,6 +40,9 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         final CheckBox cb2 = (CheckBox) v.findViewById(R.id.completed2);
 
         Course course = getItem(position);
+
+        TextView courseNumberText = (TextView) v.findViewById(R.id.CourseNumberText);
+        courseNumberText.setText("Course "+course.getNumber());
 
         final int coursenum = course.getNumber();
         final GracieUser curUser = Firebase.getGracieUser();
@@ -102,22 +105,6 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         }else{
             cb0.setEnabled(true);
             cb1.setEnabled(true);
-        }
-
-        TextView tt1 = (TextView) v.findViewById(R.id.courseNumberView);
-        TextView tt2 = (TextView) v.findViewById(R.id.coursePrimarySkill);
-        TextView tt3 = (TextView) v.findViewById(R.id.courseSecondarySkill);
-
-        if (tt1 != null) {
-            tt1.setText(""+course.getNumber());
-        }
-        if (tt2 != null) {
-            tt2.setText(course.getPrimaryTechnique());
-        }
-        if (tt3 != null) {
-            String extra = "";
-            if(course.getAllTechniques().size() > 2) extra = " ...";
-            tt3.setText(course.getSecondaryTechnique() + extra);
         }
 
         return v;
