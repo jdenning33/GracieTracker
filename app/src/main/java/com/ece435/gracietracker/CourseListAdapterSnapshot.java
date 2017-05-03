@@ -49,63 +49,66 @@ public class CourseListAdapterSnapshot extends ArrayAdapter<Course> {
 
         cb0.setTag(course);
         cb0.setChecked(curUser.didCompleteCourse(coursenum, 0));
-        cb0.setOnClickListener( new View.OnClickListener() {
-            public void onClick(View v) {
-                CheckBox cb = (CheckBox) v;
-                Course course = (Course) cb.getTag();
-                curUser.toggleCompletedCourse(coursenum, 0);
-
-                if(!curUser.didCompleteCourse(coursenum, 0) || !curUser.didCompleteCourse(coursenum, 1)){
-                    cb2.setEnabled(false);
-                } else {
-                    cb2.setEnabled(true);
-                }
-            }
-        });
+        cb0.setEnabled(false);
+//        cb0.setOnClickListener( new View.OnClickListener() {
+//            public void onClick(View v) {
+//                CheckBox cb = (CheckBox) v;
+//                Course course = (Course) cb.getTag();
+//                curUser.toggleCompletedCourse(coursenum, 0);
+//
+//                if(!curUser.didCompleteCourse(coursenum, 0) || !curUser.didCompleteCourse(coursenum, 1)){
+//                    cb2.setEnabled(false);
+//                } else {
+//                    cb2.setEnabled(true);
+//                }
+//            }
+//        });
         cb1.setTag(course);
         cb1.setChecked(curUser.didCompleteCourse(coursenum, 1));
-        cb1.setOnClickListener( new View.OnClickListener() {
-            public void onClick(View v) {
-                CheckBox cb = (CheckBox) v;
-                Course course = (Course) cb.getTag();
-                curUser.toggleCompletedCourse(coursenum, 1);
-
-                if(!curUser.didCompleteCourse(coursenum, 0) || !curUser.didCompleteCourse(coursenum, 1)){
-                    cb2.setEnabled(false);
-                } else {
-                    cb2.setEnabled(true);
-                }
-            }
-        });
+        cb1.setEnabled(false);
+//        cb1.setOnClickListener( new View.OnClickListener() {
+//            public void onClick(View v) {
+//                CheckBox cb = (CheckBox) v;
+//                Course course = (Course) cb.getTag();
+//                curUser.toggleCompletedCourse(coursenum, 1);
+//
+//                if(!curUser.didCompleteCourse(coursenum, 0) || !curUser.didCompleteCourse(coursenum, 1)){
+//                    cb2.setEnabled(false);
+//                } else {
+//                    cb2.setEnabled(true);
+//                }
+//            }
+//        });
         cb2.setTag(course);
         cb2.setChecked(curUser.didCompleteCourse(coursenum, 2));
-        cb2.setOnClickListener( new View.OnClickListener() {
-            public void onClick(View v) {
-                CheckBox cb = (CheckBox) v;
-                Course course = (Course) cb.getTag();
-                curUser.toggleCompletedCourse(coursenum, 2);
-
-                if(curUser.didCompleteCourse(coursenum, 2) ){
-                    cb0.setEnabled(false);
-                    cb1.setEnabled(false);
-                } else {
-                    cb0.setEnabled(true);
-                    cb1.setEnabled(true);
-                }
-            }
-        });
-        if(!curUser.didCompleteCourse(coursenum, 0) || !curUser.didCompleteCourse(coursenum, 1)){
-            cb2.setEnabled(false);
-        } else {
-            cb2.setEnabled(true);
-        }
-        if(curUser.didCompleteCourse(coursenum, 2)){
-            cb0.setEnabled(false);
-            cb1.setEnabled(false);
-        }else{
-            cb0.setEnabled(true);
-            cb1.setEnabled(true);
-        }
+        cb2.setEnabled(false);
+//        cb2.setOnClickListener( new View.OnClickListener() {
+//            public void onClick(View v) {
+//                CheckBox cb = (CheckBox) v;
+//                Course course = (Course) cb.getTag();
+//                curUser.toggleCompletedCourse(coursenum, 2);
+//
+//                if(curUser.didCompleteCourse(coursenum, 2) ){
+//                    cb0.setEnabled(false);
+//                    cb1.setEnabled(false);
+//                } else {
+//                    cb0.setEnabled(true);
+//                    cb1.setEnabled(true);
+//                }
+//            }
+//        });
+//        if(!curUser.didCompleteCourse(coursenum, 0) || !curUser.didCompleteCourse(coursenum, 1)){
+//            cb2.setEnabled(false);
+//        } else {
+//            cb2.setEnabled(true);
+//        }
+//        if(curUser.didCompleteCourse(coursenum, 2)){
+//            cb0.setEnabled(false);
+//            cb1.setEnabled(false);
+//        }else{
+//            cb0.setEnabled(true);
+//            cb1.setEnabled(true);
+//        }
 
         return v;
     }

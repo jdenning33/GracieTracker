@@ -21,7 +21,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener,
-CalendarFragment.OnFragmentInteractionListener,
+CalendarFragment2.OnFragmentInteractionListener,
 CourseListFragment.OnFragmentInteractionListener,
 CourseFragment.OnFragmentInteractionListener,
 Firebase.OnFireBaseInteractionListenerDB{
@@ -134,7 +134,7 @@ Firebase.OnFireBaseInteractionListenerDB{
     @Override
     public void goToCalendarFragment() {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        CalendarFragment calendarFragment = CalendarFragment.newInstance();
+        CalendarFragment2 calendarFragment = CalendarFragment2.newInstance();
         fragmentTransaction.replace(R.id.MainFragment, calendarFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();

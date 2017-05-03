@@ -1,12 +1,8 @@
 package com.ece435.gracietracker;
 
+import android.app.Activity;
 import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -34,10 +30,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
-import android.text.method.ScrollingMovementMethod;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.*;
@@ -48,11 +42,9 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 import static android.app.Activity.RESULT_OK;
 
-public class CalendarFragment extends Fragment implements EasyPermissions.PermissionCallbacks {
+public class CalendarApi implements EasyPermissions.PermissionCallbacks {
     GoogleAccountCredential mCredential;
-    private TextView mOutputText;
-    private Button mCallApiButton;
-    ProgressDialog mProgress;
+
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -63,104 +55,27 @@ public class CalendarFragment extends Fragment implements EasyPermissions.Permis
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
 
+    private CalendarFragment2 mListener;
+    private java.util.Calendar eventDate;
 
-    private OnFragmentInteractionListener mListener;
-
-    public CalendarFragment() { }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     */
-    public static CalendarFragment newInstance() {
-        CalendarFragment fragment = new CalendarFragment();
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+    public CalendarApi(CalendarFragment2 context) {
+        if (context instanceof CalendarApi.CalendarApiListener) {
+            this.mListener = context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement CalendarApiListener");
         }
 
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
-                getActivity().getApplicationContext(), Arrays.asList(SCOPES))
+                context.getActivity().getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
-
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-//        View view = inflater.inflate(R.layout.fragment_calendar, container, false);
 
-        LinearLayout activityLayout = new LinearLayout(getActivity());
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        activityLayout.setLayoutParams(lp);
-        activityLayout.setOrientation(LinearLayout.VERTICAL);
-        activityLayout.setPadding(16, 16, 16, 16);
-
-        ViewGroup.LayoutParams tlp = new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        mCallApiButton = new Button(getActivity());
-        mCallApiButton.setText(BUTTON_TEXT);
-        mCallApiButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallApiButton.setEnabled(false);
-                mOutputText.setText("");
-                getResultsFromApi();
-                mCallApiButton.setEnabled(true);
-            }
-        });
-        activityLayout.addView(mCallApiButton);
-
-        mOutputText = new TextView(getActivity());
-        mOutputText.setLayoutParams(tlp);
-        mOutputText.setPadding(16, 16, 16, 16);
-        mOutputText.setVerticalScrollBarEnabled(true);
-        mOutputText.setMovementMethod(new ScrollingMovementMethod());
-        mOutputText.setText(
-                "Click the \'" + BUTTON_TEXT +"\' button to test the API.");
-        activityLayout.addView(mOutputText);
-
-        mProgress = new ProgressDialog(getActivity());
-        mProgress.setMessage("Calling Google Calendar API ...");
-
-        return activityLayout;
+    public interface CalendarApiListener {
+        public void onCalendarResultReturns(List<Event> events);
     }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     */
-    public interface OnFragmentInteractionListener {
-    }
-
 
     /**
      * Attempt to call the API, after verifying that all the preconditions are
@@ -169,13 +84,16 @@ public class CalendarFragment extends Fragment implements EasyPermissions.Permis
      * of the preconditions are not satisfied, the app will prompt the user as
      * appropriate.
      */
-    private void getResultsFromApi() {
+    // TODO: add two date parameters to pass to the api call
+    public void getResultsFromApi(java.util.Calendar date) {
+        this.eventDate = date;
+
         if (! isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (! isDeviceOnline()) {
-            mOutputText.setText("No network connection available.");
+            Toast.makeText(mListener.getActivity(), "No network connection available.", Toast.LENGTH_SHORT);
         } else {
             new MakeRequestTask(mCredential).execute();
         }
@@ -194,15 +112,15 @@ public class CalendarFragment extends Fragment implements EasyPermissions.Permis
     @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
     private void chooseAccount() {
         if (EasyPermissions.hasPermissions(
-                getActivity(), Manifest.permission.GET_ACCOUNTS)) {
-            String accountName = getActivity().getPreferences(Context.MODE_PRIVATE)
+                mListener.getActivity(), Manifest.permission.GET_ACCOUNTS)) {
+            String accountName = mListener.getActivity().getPreferences(Context.MODE_PRIVATE)
                     .getString(PREF_ACCOUNT_NAME, null);
             if (accountName != null) {
                 mCredential.setSelectedAccountName(accountName);
-                getResultsFromApi();
+                getResultsFromApi(eventDate);
             } else {
                 // Start a dialog from which the user can choose an account
-                startActivityForResult(
+                mListener.startActivityForResult(
                         mCredential.newChooseAccountIntent(),
                         REQUEST_ACCOUNT_PICKER);
             }
@@ -226,18 +144,16 @@ public class CalendarFragment extends Fragment implements EasyPermissions.Permis
      * @param data Intent (containing result data) returned by incoming
      *     activity result.
      */
-    @Override
     public void onActivityResult(
             int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         switch(requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
-                    mOutputText.setText(
-                            "This app requires Google Play Services. Please install " +
-                                    "Google Play Services on your device and relaunch this app.");
+                    Toast.makeText(mListener.getActivity(),
+                            "This feature requires Google Play Services. Please install " +
+                                    "Google Play Services on your device and relaunch this app.", Toast.LENGTH_SHORT).show();
                 } else {
-                    getResultsFromApi();
+                    getResultsFromApi(eventDate);
                 }
                 break;
             case REQUEST_ACCOUNT_PICKER:
@@ -247,18 +163,18 @@ public class CalendarFragment extends Fragment implements EasyPermissions.Permis
                             data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                     if (accountName != null) {
                         SharedPreferences settings =
-                                getActivity().getPreferences(Context.MODE_PRIVATE);
+                                mListener.getActivity().getPreferences(Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(PREF_ACCOUNT_NAME, accountName);
                         editor.apply();
                         mCredential.setSelectedAccountName(accountName);
-                        getResultsFromApi();
+                        getResultsFromApi(eventDate);
                     }
                 }
                 break;
             case REQUEST_AUTHORIZATION:
                 if (resultCode == RESULT_OK) {
-                    getResultsFromApi();
+                    getResultsFromApi(eventDate);
                 }
                 break;
         }
@@ -276,7 +192,6 @@ public class CalendarFragment extends Fragment implements EasyPermissions.Permis
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         EasyPermissions.onRequestPermissionsResult(
                 requestCode, permissions, grantResults, this);
     }
@@ -311,7 +226,7 @@ public class CalendarFragment extends Fragment implements EasyPermissions.Permis
      */
     private boolean isDeviceOnline() {
         ConnectivityManager connMgr =
-                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) mListener.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return (networkInfo != null && networkInfo.isConnected());
     }
@@ -325,7 +240,7 @@ public class CalendarFragment extends Fragment implements EasyPermissions.Permis
         GoogleApiAvailability apiAvailability =
                 GoogleApiAvailability.getInstance();
         final int connectionStatusCode =
-                apiAvailability.isGooglePlayServicesAvailable(getActivity());
+                apiAvailability.isGooglePlayServicesAvailable(mListener.getActivity());
         return connectionStatusCode == ConnectionResult.SUCCESS;
     }
 
@@ -337,7 +252,7 @@ public class CalendarFragment extends Fragment implements EasyPermissions.Permis
         GoogleApiAvailability apiAvailability =
                 GoogleApiAvailability.getInstance();
         final int connectionStatusCode =
-                apiAvailability.isGooglePlayServicesAvailable(getActivity());
+                apiAvailability.isGooglePlayServicesAvailable(mListener.getActivity());
         if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
             showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
         }
@@ -354,7 +269,7 @@ public class CalendarFragment extends Fragment implements EasyPermissions.Permis
             final int connectionStatusCode) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         Dialog dialog = apiAvailability.getErrorDialog(
-                getActivity(),
+                mListener.getActivity(),
                 connectionStatusCode,
                 REQUEST_GOOGLE_PLAY_SERVICES);
         dialog.show();
@@ -364,7 +279,7 @@ public class CalendarFragment extends Fragment implements EasyPermissions.Permis
      * An asynchronous task that handles the Google Calendar API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
-    private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
+    private class MakeRequestTask extends AsyncTask<Void, Void, List<Event>> {
         private com.google.api.services.calendar.Calendar mService = null;
         private Exception mLastError = null;
 
@@ -382,7 +297,7 @@ public class CalendarFragment extends Fragment implements EasyPermissions.Permis
          * @param params no parameters needed for this task.
          */
         @Override
-        protected List<String> doInBackground(Void... params) {
+        protected List<Event> doInBackground(Void... params) {
             try {
                 return getDataFromApi();
             } catch (Exception e) {
@@ -397,12 +312,12 @@ public class CalendarFragment extends Fragment implements EasyPermissions.Permis
          * @return List of Strings describing returned events.
          * @throws IOException
          */
-        private List<String> getDataFromApi() throws IOException {
-            Calendar eventCal = Calendar.getInstance();
-            eventCal.set(2017, Calendar.MAY, 1, 0,0,0);
-            DateTime eventDateStart = new DateTime(eventCal.getTime());
-            eventCal.set(2017, Calendar.MAY, 10);
-            DateTime eventDateEnd = new DateTime(eventCal.getTime());
+        private List<Event> getDataFromApi() throws IOException {
+            DateTime eventDateStart = new DateTime(eventDate.getTime());
+            Calendar cal = GregorianCalendar.getInstance();
+            cal.setTime(eventDate.getTime());
+            cal.add(Calendar.DAY_OF_MONTH, +1);
+            DateTime eventDateEnd = new DateTime(cal.getTime());
 
             DateTime now = new DateTime(System.currentTimeMillis());
             List<String> eventStrings = new ArrayList<String>();
@@ -424,55 +339,39 @@ public class CalendarFragment extends Fragment implements EasyPermissions.Permis
                     .execute();
             List<Event> items = events.getItems();
 
-            for (Event event : items) {
-                DateTime start = event.getStart().getDateTime();
-                if (start == null) {
-                    // All-day events don't have start times, so just use
-                    // the start date.
-                    start = event.getStart().getDate();
-                }
-                eventStrings.add(
-                        String.format("%s (%s)", event.getSummary(), start));
-            }
-            return eventStrings;
+
+            return items;
         }
 
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
-            mProgress.show();
+
         }
 
         @Override
-        protected void onPostExecute(List<String> output) {
-            mProgress.hide();
-            if (output == null || output.size() == 0) {
-                mOutputText.setText("No results returned.");
-            } else {
-                output.add(0, "Data retrieved using the Google Calendar API:");
-                mOutputText.setText(TextUtils.join("\n", output));
-            }
+        protected void onPostExecute(List<Event> output) {
+            ((CalendarApiListener) mListener).onCalendarResultReturns(output);
         }
 
         @Override
         protected void onCancelled() {
-            mProgress.hide();
+
             if (mLastError != null) {
                 if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
                     showGooglePlayServicesAvailabilityErrorDialog(
                             ((GooglePlayServicesAvailabilityIOException) mLastError)
                                     .getConnectionStatusCode());
                 } else if (mLastError instanceof UserRecoverableAuthIOException) {
-                    startActivityForResult(
+                    mListener.startActivityForResult(
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             CalendarApi.REQUEST_AUTHORIZATION);
                 } else {
-                    mOutputText.setText("The following error occurred:\n"
-                            + mLastError.getMessage());
+                    Toast.makeText(mListener.getActivity(), "The following error occurred:\n"
+                            + mLastError.getMessage(), Toast.LENGTH_SHORT);
                 }
             } else {
-                mOutputText.setText("Request cancelled.");
+                Toast.makeText(mListener.getActivity(), "Request cancelled.", Toast.LENGTH_SHORT);
             }
         }
     }
